@@ -14,8 +14,7 @@ from subprocess import check_output
 
 logger = logging.getLogger('newrelic_lvm')
 pid = "/tmp/nr_lvm_thinpool.pid"
-newrelic_guid = "com.webgeoservices.lvm.thinpool"
-process_id = os.getpid()
+newrelic_guid = "com.webgeoservices.lvm_thinpool"
 
 
 def parse_config_file(config_file):
@@ -77,11 +76,12 @@ def set_headers():
 
 
 def set_datas():
+    process_id = os.getpid()
     lvs_result = check_output(["sudo","lvs","--noheadings","-o","lv_name,data_percent,metadata_percent", "--separator",","])
     lvs_values = lvs_result.split(',')
     volume_name = lvs_values[0].strip()
-    data_percent = lvs_values[1].strip()
-    meta_percent = lvs_values[2].strip()
+    data_percent = float(lvs_values[1].strip())
+    meta_percent = float(lvs_values[2].strip())
     lvm_datas = {
           "agent": {
             "host": "nr_lvm_thinpool",
@@ -118,6 +118,7 @@ def post_response(headers, datas):
             logger.critical(response.content)
     else:
         resp = response.json()
+        logger.info(json.dumps(datas))
         logger.info("""Send datas to Newrelic : %s"""%resp["status"])
 
 
