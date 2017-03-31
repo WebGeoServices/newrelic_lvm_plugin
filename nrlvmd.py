@@ -79,7 +79,7 @@ def set_datas():
     process_id = os.getpid()
     try:
         lvs_result = subprocess.check_output(["lvs","--noheadings","-o","lv_name,data_percent,metadata_percent", "--separator",","])
-        lvs_values = lvs_result.split(',')
+        lvs_values = lvs_result.decode('utf8').split(',')
         volume_name = lvs_values[0].strip()
         data_percent = float(lvs_values[1].strip())
         meta_percent = float(lvs_values[2].strip())
