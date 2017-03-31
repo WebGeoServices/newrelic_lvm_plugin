@@ -13,7 +13,7 @@ from time import sleep
 from subprocess import check_output
 
 logger = logging.getLogger('newrelic_lvm')
-pid = "/tmp/nr_lvm_thinpool.pid"
+pid = "/var/run/nr_lvm_thinpool.pid"
 newrelic_guid = "com.webgeoservices.lvm_thinpool"
 
 
