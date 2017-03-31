@@ -8,9 +8,9 @@ import argparse
 import daemonize
 import signal
 import socket
+import subprocess
 from time import sleep
 
-from subprocess import check_output
 
 logger = logging.getLogger('newrelic_lvm')
 pid = "/var/run/nr_lvm_thinpool.pid"
@@ -77,30 +77,39 @@ def set_headers():
 
 def set_datas():
     process_id = os.getpid()
-    lvs_result = check_output(["sudo","lvs","--noheadings","-o","lv_name,data_percent,metadata_percent", "--separator",","])
-    lvs_values = lvs_result.split(',')
-    volume_name = lvs_values[0].strip()
-    data_percent = float(lvs_values[1].strip())
-    meta_percent = float(lvs_values[2].strip())
-    lvm_datas = {
-          "agent": {
-            "host": "nr_lvm_thinpool",
-            "pid": process_id,
-            "version": "0.0.1"
-          },
-          "components": [
-            {
-              "name": os.environ["NEWRELIC_HOSTNAME"],
-              "guid": newrelic_guid,
-              "duration": 60,
-              "metrics": {
-                "Component/lvm/%s/Data/Used[percent]"%volume_name: data_percent,
-                "Component/lvm/%s/Metadata/Used[percent]"%volume_name: meta_percent
-              }
+    try:
+        lvs_result = subprocess.check_output(["lvs","--noheadings","-o","lv_name,data_percent,metadata_percent", "--separator",","])
+        lvs_values = lvs_result.split(',')
+        volume_name = lvs_values[0].strip()
+        data_percent = float(lvs_values[1].strip())
+        meta_percent = float(lvs_values[2].strip())
+    except subprocess.CalledProcessError as e:
+        logger.error(e)
+    except IndexError:
+        logger.error("lvs command return undecryptable values")
+        logger.error("lvs --noheadings -o lv_name,data_percent,metadata_percent")
+    except Exception as e:
+        logger.error(e)
+    else:
+        lvm_datas = {
+              "agent": {
+                "host": "nr_lvm_thinpool",
+                "pid": process_id,
+                "version": "0.0.1"
+              },
+              "components": [
+                {
+                  "name": os.environ["NEWRELIC_HOSTNAME"],
+                  "guid": newrelic_guid,
+                  "duration": 60,
+                  "metrics": {
+                    "Component/lvm/%s/Data/Used[percent]"%volume_name: data_percent,
+                    "Component/lvm/%s/Metadata/Used[percent]"%volume_name: meta_percent
+                  }
+                }
+              ]
             }
-          ]
-        }
-    return lvm_datas
+        return lvm_datas
 
 
 def post_response(headers, datas):
