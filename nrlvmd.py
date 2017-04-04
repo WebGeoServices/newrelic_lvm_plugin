@@ -29,6 +29,7 @@ def parse_config_file(config_file):
             if line[0] != "#" and len(line.strip()) != 0:
                 config_var = line.split("=")
                 config_values[config_var[0].strip()] = config_var[1].strip()
+        config.close()
     return config_values
 
 
@@ -59,11 +60,7 @@ def setup_logger(loglevel):
     logger.setLevel(loglevel)
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    file_handler = logging.FileHandler("/tmp/nr_lvm_thinpool.log", "w")
-    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
-    return file_handler
 
 
 def set_headers():
@@ -85,11 +82,14 @@ def set_datas():
         meta_percent = float(lvs_values[2].strip())
     except subprocess.CalledProcessError as e:
         logger.error(e)
+        raise e
     except IndexError:
-        logger.error("lvs command return undecryptable values")
+        logger.error("lvs command return unknown values")
         logger.error("lvs --noheadings -o lv_name,data_percent,metadata_percent")
+        return None
     except Exception as e:
         logger.error(e)
+        raise e
     else:
         lvm_datas = {
               "agent": {
@@ -146,8 +146,7 @@ def main():
     parser = setup_arg_parser()
     args = parser.parse_args()
     loglevel = args.loglevel
-    file_handler = setup_logger(getattr(logging, loglevel.upper(), None))
-    keep_fds = [file_handler.stream.fileno()]
+    setup_logger(getattr(logging, loglevel.upper(), None))
     config_file = "/etc/newrelic/nrsysmond.cfg"
 
     if args.state == "start":
@@ -162,8 +161,7 @@ def main():
                 pid=pid,
                 action=launch_daemon,
                 logger=logger,
-                foreground=args.foreground,
-                keep_fds=keep_fds
+                foreground=args.foreground
             )
             daemon.start()
         else:
