@@ -14,7 +14,11 @@ setup(
     author_email='operation@webgeoservices.com',
     description='Plugin to monitor LVM Disk space left on NewRelic',
     long_description=__doc__,
-    packages=['nrlvmd.py'],
+    #packages=['nrlvmd.py'],
+    entry_points = {
+      'console_scripts': [
+       'nrlvmd = nrlvmd:main',
+      ]},
     install_requires=[
         'daemonize<=2.4.7',
         'requests<=2.13.0'
