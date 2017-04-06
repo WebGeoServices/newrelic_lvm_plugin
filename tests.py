@@ -1,9 +1,11 @@
 import socket
 import unittest
-from pyassert import *
-from mock import patch
 
-from nrlvmd import parse_config_file, set_environment_variables, set_headers, set_datas
+from mock import patch
+from pyassert import *
+
+from source.nrlvmd import parse_config_file, set_environment_variables, set_headers, set_datas
+
 
 class NrLvmTests(unittest.TestCase):
 
@@ -56,7 +58,7 @@ class NrLvmTests(unittest.TestCase):
         header = set_headers()
         assert_that(header['X-License-Key']).equals(None)
 
-    @patch("nrlvmd.subprocess.check_output")
+    @patch("source.nrlvmd.subprocess.check_output")
     def test_set_datas_from_lvs_command(self, mock_check_output):
         self._set_environment_variable()
         check_output = "test_thinpool,12,2"
@@ -75,7 +77,7 @@ class NrLvmTests(unittest.TestCase):
         self._set_environment_variable()
         assert_that(test_set_data).raises(OSError)
 
-    @patch("nrlvmd.subprocess.check_output")
+    @patch("source.nrlvmd.subprocess.check_output")
     def test_set_datas_from_wrong_lvs_returned_values(self, mock_check_output):
         self._set_environment_variable()
         mock_check_output.return_value = "wrong_return"
