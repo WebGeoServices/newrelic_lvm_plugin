@@ -5,7 +5,7 @@ This plugin permit the monitoring of the lvm's volume in **Newrelic**
 
 **WARNING**: As the lvm information are only accessible with root privileges, this plugin have to be launch as root
 
-#Dependency
+# Dependency
 * _python 2.7_ or _python 3_
 - library requests
 + library daemonize
@@ -17,7 +17,7 @@ You can install the plugin with pip
 sudo pip install nr_lvm_plugin
 ```
 
-##From Sources:
+## From Sources:
 First install the requirements
 ```shell
 pip install -r requirements.txt
@@ -25,18 +25,18 @@ pip install -r requirements.txt
 
 Then you can use directly the file nrlvmd.py
 
-#Howto use it:
+# Howto use it:
 The script is a daemon, to start it you just have to launch the following command as root
 ```shell
 sudo nrlvmd.py start
 ```
 
-##Options:
+## Options:
 * option -f run the daemon in foreground
 - option -log let you define the loglevel (_default is CRITICAL_)
 + option -config is the path to the config file
 
-##Configuration:
+## Configuration:
 The script need 2 config values
 * license_key: which is your Newrelic's licence key
 + hostname: The server's name that will appear in Newrelic's interface
