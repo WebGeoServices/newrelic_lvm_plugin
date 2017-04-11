@@ -1,0 +1,42 @@
+Source: newrelic-lvm-plugin
+Maintainer: Web Geo Services <operations@webgeoserivces.com>
+Uploaders: Daniele Tricoli <eriol@mornie.org>
+Section: python
+Priority: optional
+Build-Depends:
+ debhelper (>= 9),
+ dh-python,
+ dh-systemd (>=1.5),
+ python,
+ python3 
+Homepage: https://github.com/WebGeoServices
+Vcs-Git: https://github.com/WebGeoServices/newrelic_lvm_plugin.git
+Vcs-Browser: https://github.com/WebGeoServices/newrelic_lvm_plugin
+
+Package: python-newrelic-lvm-plugin
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python-daemonize,
+ python-requests
+Description: plugin to report lvm thinpool metrics to newrelic plugin
+ .
+ Features
+ .
+   - daemon that sends metrics periodocaly
+
+Package: python3-newrelic-lvm-plugin
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-daemonize,
+ python3-requests
+Description: plugin to report lvm thinpool metrics to newrelic plugin
+ .
+ Features
+ .
+   - daemon that sends metrics periodocaly
+ .
+ This package contains the Python 3 version of the library.
