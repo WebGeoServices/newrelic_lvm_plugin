@@ -75,11 +75,12 @@ def set_headers():
 def set_datas():
     process_id = os.getpid()
     try:
-        lvs_result = subprocess.check_output(["lvs","--noheadings","-o","lv_name,data_percent,metadata_percent", "--separator",","])
+        lvs_result = subprocess.check_output(["lvs","--noheadings","-o","lv_name,lv_size,data_percent,metadata_percent", "--separator",","])
         lvs_values = lvs_result.decode('utf8').split(',')
         volume_name = lvs_values[0].strip()
-        data_percent = float(lvs_values[1].strip())
-        meta_percent = float(lvs_values[2].strip())
+        volume_space = float(lvs_values[1].strip()[:-1])
+        data_percent = float(lvs_values[2].strip())
+        meta_percent = float(lvs_values[3].strip())
     except subprocess.CalledProcessError as e:
         logger.error(e)
         raise e
@@ -103,8 +104,9 @@ def set_datas():
                   "guid": newrelic_guid,
                   "duration": 60,
                   "metrics": {
-                    "Component/lvm/%s/Data/Used[percent]"%volume_name: data_percent,
-                    "Component/lvm/%s/Metadata/Used[percent]"%volume_name: meta_percent
+                    "Component/lvm/space/%s/Total[gigaBytes|read]" % volume_name: int(volume_space),
+                    "Component/lvm/usage/%s/Data/Used[percent]"%volume_name: data_percent,
+                    "Component/lvm/usage/%s/Metadata/Used[percent]"%volume_name: meta_percent
                   }
                 }
               ]
@@ -137,7 +139,7 @@ def launch_daemon():
             headers = set_headers()
             datas = set_datas()
             post_response(headers, datas)
-            sleep(59)
+            sleep(60)
         except KeyboardInterrupt:
             exit()
 
