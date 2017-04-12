@@ -94,7 +94,7 @@ def set_datas():
     else:
         lvm_datas = {
               "agent": {
-                "host": "nr_lvm_thinpool",
+                "host": os.environ["NEWRELIC_HOSTNAME"],
                 "pid": process_id,
                 "version": "0.0.1"
               },
