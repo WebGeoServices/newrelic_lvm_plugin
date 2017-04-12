@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name='nr_lvm_plugin',
-    version='0.1.4',
+    version='0.1.5',
     url='https://github.com/WebGeoServices/newrelic_lvm_plugin',
     license='MIT',
     author='WebGeoServices',
@@ -19,7 +19,7 @@ setup(
         'daemonize==2.4.7',
         'requests==2.13.0'
     ],
-    download_url = 'https://github.com/WebGeoServices/newrelic_lvm_plugin/releases/tag/0.1.4',
+    download_url = 'https://github.com/WebGeoServices/newrelic_lvm_plugin/releases/tag/0.1.5',
     keywords = ['newrelic', 'LVM', 'Thinpool'],
     classifiers = [],
 )
