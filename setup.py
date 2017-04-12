@@ -16,10 +16,10 @@ setup(
     long_description=__doc__,
     scripts = ["nrlvmd.py"],
     install_requires=[
-        'daemonize<=2.4.7',
-        'requests<=2.13.0'
+        'daemonize==2.4.7',
+        'requests==2.13.0'
     ],
-    download_url = 'https://github.com/WebGeoServices/newrelic_lvm_plugin/tarball/0.1',
+    download_url = 'https://github.com/WebGeoServices/newrelic_lvm_plugin/releases/tag/0.1.4',
     keywords = ['newrelic', 'LVM', 'Thinpool'],
     classifiers = [],
 )
