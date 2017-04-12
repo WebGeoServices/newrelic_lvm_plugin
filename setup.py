@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name='nr_lvm_plugin',
-    version='0.1.3',
+    version='0.1.4',
     url='https://github.com/WebGeoServices/newrelic_lvm_plugin',
     license='MIT',
     author='WebGeoServices',
