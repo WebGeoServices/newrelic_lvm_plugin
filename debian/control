@@ -1,6 +1,6 @@
 Source: newrelic-lvm-plugin
 Maintainer: Web Geo Services <operations@webgeoserivces.com>
-Uploaders: Daniele Tricoli <eriol@mornie.org>
+Uploaders: Web Geo Services <operations@webgeoserivces.com>
 Section: python
 Priority: optional
 Build-Depends:
