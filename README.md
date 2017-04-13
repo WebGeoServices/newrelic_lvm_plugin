@@ -26,7 +26,7 @@ echo "deb [trusted=yes] https://repo.fury.io/webgeoservices/ /" > \
 Then install the package
 ```
 sudo apt-get install python3-newrelic-lvm-plugin 
-``
+```
 
 ## From Sources:
 First install the requirements
