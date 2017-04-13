@@ -1,0 +1,11 @@
+[Unit]
+Description=NewRelic lvm thinpool monitoring
+Requires=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/nrlvmd.py start
+ExecStop=/usr/bin/nrlvmd.py stop
+
+[Install]
+WantedBy=multi-user.target

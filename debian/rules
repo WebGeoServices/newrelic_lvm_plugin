@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=newrelic-lvm-plugin
+
+%:
+	dh $@ --with python2,python3 --buildsystem=pybuild --with systemd
+
+override_dh_installinit:
+	dh_systemd_enable --name=newrelic-lvm-plugin newrelic-lvm-plugin.service
+	dh_installinit --no-start --noscripts
+	dh_systemd_start --no-restart-on-upgrade
+
+override_dh_auto_test:
+
