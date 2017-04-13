@@ -17,6 +17,17 @@ You can install the plugin with pip
 sudo pip install nr_lvm_plugin
 ```
 
+## With APT:
+Add our GemFury repository in the apt's source list
+```
+echo "deb [trusted=yes] https://repo.fury.io/webgeoservices/ /" > \
+/etc/apt/sources.list.d/fury.list
+```
+Then install the package
+```
+sudo apt-get install python3-newrelic-lvm-plugin 
+``
+
 ## From Sources:
 First install the requirements
 ```shell
