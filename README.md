@@ -27,7 +27,10 @@ Then install the package
 ```
 sudo apt-get install python3-newrelic-lvm-plugin 
 ```
-
+Run it with systemd
+```
+service newrelic-lvm-plugin start
+```
 ## From Sources:
 First install the requirements
 ```shell
