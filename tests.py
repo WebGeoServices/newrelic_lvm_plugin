@@ -1,9 +1,11 @@
 import socket
 import unittest
+from pprint import pprint
 
 from mock import patch
 from pyassert import *
 
+from assets.lvs_commands_datas import lvs_asset
 from nrlvmd import parse_config_file, set_environment_variables, set_headers, set_datas
 
 
@@ -64,10 +66,10 @@ class NrLvmTests(unittest.TestCase):
         check_output = "test_thinpool,38,12,2"
         mock_check_output.return_value = check_output.encode('utf8')
         datas = set_datas()
-        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Data/Used[percent]')
-        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Metadata/Used[percent]')
-        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Data/Used[percent]']).equals(float(12))
-        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Metadata/Used[percent]']).equals(float(2))
+        assert_that(datas[0]['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Data/Used[percent]')
+        assert_that(datas[0]['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Metadata/Used[percent]')
+        assert_that(datas[0]['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Data/Used[percent]']).equals(float(12))
+        assert_that(datas[0]['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Metadata/Used[percent]']).equals(float(2))
 
     def test_set_datas_failed_if_lvs_is_not_installed(self):
         def test_set_data():
@@ -82,7 +84,15 @@ class NrLvmTests(unittest.TestCase):
         self._set_environment_variable()
         mock_check_output.return_value = "wrong_return"
         datas = set_datas()
-        assert_that(datas).equals(None)
+        assert_that(datas).equals([])
+
+    @patch("nrlvmd.subprocess.check_output")
+    def test_set_datas_from_multiple_volumes(self, mock_check_output):
+        self._set_environment_variable()
+        check_output = lvs_asset
+        mock_check_output.return_value = check_output.encode('utf8')
+        datas = set_datas()
+        assert_that(len(datas)).equals(8)
 
 if __name__ == '__main__':
     unittest.main()

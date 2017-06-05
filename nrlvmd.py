@@ -11,9 +11,10 @@ import socket
 import subprocess
 from time import sleep
 
+from assets.lvs_commands_datas import lvs_asset
 
 logger = logging.getLogger('newrelic_lvm')
-pid = "/var/run/nr_lvm_thinpool.pid"
+pid = "/tmp/nr_lvm_thinpool.pid"
 newrelic_guid = "com.webgeoservices.lvm_thinpool"
 
 
@@ -73,14 +74,37 @@ def set_headers():
 
 
 def set_datas():
+    def add_volume(line):
+        meta_percent = 0
+        try:
+            lvs_values = line.decode('utf8').split(',')
+            volume_name = lvs_values[0].strip()
+            volume_space = float(lvs_values[1].strip()[:-1])
+            data_percent = float(lvs_values[2].strip())
+            if lvs_values[3].strip() != "":
+                meta_percent = float(lvs_values[3].strip())
+        except Exception as e:
+            logger.error(e)
+            return None
+        else:
+            return {
+                'name': volume_name,
+                'space': volume_space,
+                'data': data_percent,
+                'meta': meta_percent
+            }
+
+    lvm_datas = []
+    volumes = []
     process_id = os.getpid()
     try:
         lvs_result = subprocess.check_output(["lvs","--noheadings","-o","lv_name,lv_size,data_percent,metadata_percent", "--separator",","])
-        lvs_values = lvs_result.decode('utf8').split(',')
-        volume_name = lvs_values[0].strip()
-        volume_space = float(lvs_values[1].strip()[:-1])
-        data_percent = float(lvs_values[2].strip())
-        meta_percent = float(lvs_values[3].strip())
+        lvs_lines = lvs_result.splitlines()
+        for line in lvs_lines:
+            volume_data = add_volume(line)
+            if volume_data:
+                volumes.append(volume_data)
+
     except subprocess.CalledProcessError as e:
         logger.error(e)
         raise e
@@ -92,25 +116,26 @@ def set_datas():
         logger.error(e)
         raise e
     else:
-        lvm_datas = {
-              "agent": {
-                "host": os.environ["NEWRELIC_HOSTNAME"],
-                "pid": process_id,
-                "version": "0.0.1"
-              },
-              "components": [
-                {
-                  "name": os.environ["NEWRELIC_HOSTNAME"],
-                  "guid": newrelic_guid,
-                  "duration": 60,
-                  "metrics": {
-                    "Component/lvm/space/%s/Total[gigaBytes|read]" % volume_name: int(volume_space),
-                    "Component/lvm/usage/%s/Data/Used[percent]"%volume_name: data_percent,
-                    "Component/lvm/usage/%s/Metadata/Used[percent]"%volume_name: meta_percent
-                  }
-                }
-              ]
-            }
+        for volume in volumes:
+            lvm_datas.append({
+                  "agent": {
+                    "host": os.environ["NEWRELIC_HOSTNAME"]+" / "+volume['name'],
+                    "pid": process_id,
+                    "version": "0.0.1"
+                  },
+                  "components": [
+                    {
+                      "name": os.environ["NEWRELIC_HOSTNAME"]+" / "+volume['name'],
+                      "guid": newrelic_guid,
+                      "duration": 60,
+                      "metrics": {
+                        "Component/lvm/space/Total[gigaBytes|read]": int(volume['space']),
+                        "Component/lvm/usage/Data/Used[percent]": volume['data'],
+                        "Component/lvm/usage/Metadata/Used[percent]": volume['meta']
+                      }
+                    }
+                  ]
+                })
         return lvm_datas
 
 
@@ -138,7 +163,8 @@ def launch_daemon():
         try:
             headers = set_headers()
             datas = set_datas()
-            post_response(headers, datas)
+            for data in datas:
+                post_response(headers, data)
             sleep(60)
         except KeyboardInterrupt:
             exit()
