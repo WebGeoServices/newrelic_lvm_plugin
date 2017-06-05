@@ -84,7 +84,7 @@ def set_datas():
             if lvs_values[3].strip() != "":
                 meta_percent = float(lvs_values[3].strip())
         except Exception as e:
-            logger.error(e)
+            logger.info(e)
             return None
         else:
             return {
@@ -121,7 +121,7 @@ def set_datas():
                   "agent": {
                     "host": os.environ["NEWRELIC_HOSTNAME"]+" / "+volume['name'],
                     "pid": process_id,
-                    "version": "0.0.1"
+                    "version": "0.0.2"
                   },
                   "components": [
                     {
