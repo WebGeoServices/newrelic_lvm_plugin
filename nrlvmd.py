@@ -14,7 +14,7 @@ from time import sleep
 from assets.lvs_commands_datas import lvs_asset
 
 logger = logging.getLogger('newrelic_lvm')
-pid = "/tmp/nr_lvm_thinpool.pid"
+pid = "/var/run/nr_lvm_thinpool.pid"
 newrelic_guid = "com.webgeoservices.lvm_thinpool"
 
 
