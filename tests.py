@@ -64,10 +64,10 @@ class NrLvmTests(unittest.TestCase):
         check_output = "test_thinpool,38,12,2"
         mock_check_output.return_value = check_output.encode('utf8')
         datas = set_datas()
-        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Data/Used[percent]')
-        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/test_thinpool/Metadata/Used[percent]')
-        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Data/Used[percent]']).equals(float(12))
-        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/test_thinpool/Metadata/Used[percent]']).equals(float(2))
+        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/thinpool/Data/Used[percent]')
+        assert_that(datas['components'][0]["metrics"]).contains('Component/lvm/usage/thinpool/Metadata/Used[percent]')
+        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/thinpool/Data/Used[percent]']).equals(float(12))
+        assert_that(datas['components'][0]["metrics"]['Component/lvm/usage/thinpool/Metadata/Used[percent]']).equals(float(2))
 
     def test_set_datas_failed_if_lvs_is_not_installed(self):
         def test_set_data():

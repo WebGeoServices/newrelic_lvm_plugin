@@ -1,5 +1,6 @@
-newrelic-lvm-plugin (1.0) UNRELEASED; urgency=medium
+newrelic-lvm-plugin (1.1) UNRELEASED; urgency=medium
 
   * Initial release. (Closes: #XXXXXX)
+  * Fix issue because of dynamic's volumes name (Closes: #6)
 
  -- Ubuntu <ubuntu@ubuntu-xenial.localdomain>  Fri, 31 Mar 2017 13:42:19 +0000
