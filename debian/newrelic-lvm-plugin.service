@@ -6,6 +6,8 @@ Requires=network-online.target
 Type=forking
 ExecStart=/usr/share/python/newrelic-lvm-plugin/bin/nrlvmd.py start
 ExecStop=/usr/share/python/newrelic-lvm-plugin/bin/nrlvmd.py stop
+Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
