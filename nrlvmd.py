@@ -104,9 +104,9 @@ def set_datas():
                   "guid": newrelic_guid,
                   "duration": 60,
                   "metrics": {
-                    "Component/lvm/space/%s/Total[gigaBytes|read]" % volume_name: int(volume_space),
-                    "Component/lvm/usage/%s/Data/Used[percent]"%volume_name: data_percent,
-                    "Component/lvm/usage/%s/Metadata/Used[percent]"%volume_name: meta_percent
+                    "Component/lvm/space/thinpool/Total[gigaBytes|read]": int(volume_space),
+                    "Component/lvm/usage/thinpool/Data/Used[percent]": data_percent,
+                    "Component/lvm/usage/thinpool/Metadata/Used[percent]": meta_percent
                   }
                 }
               ]
