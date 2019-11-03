@@ -1,2 +1,2 @@
 daemonize==2.4.7
-requests==2.13.0
+requests==2.20.0

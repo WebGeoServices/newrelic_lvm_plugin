@@ -17,7 +17,7 @@ setup(
     scripts = ["nrlvmd.py"],
     install_requires=[
         'daemonize==2.4.7',
-        'requests==2.13.0'
+        'requests==2.20.0'
     ],
     download_url = 'https://github.com/WebGeoServices/newrelic_lvm_plugin/releases/tag/0.1.6',
     keywords = ['newrelic', 'LVM', 'Thinpool'],
